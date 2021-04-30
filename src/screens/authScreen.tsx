@@ -37,13 +37,15 @@ const AuthScreen: FC = () => {
     console.log(12);
     setIsLoginShowing(true);
     setIsLoginBtnSubmitting(true);
-    loginBtnLeftAnim(isLoginShowing ? 100 : 0);
+
+    loginBtnLeftAnim(100);
   };
 
   const backToNothing = () => {
     setIsLoginBtnSubmitting(false);
     setIsLoginShowing(false);
     setIsSignupShowing(false);
+    loginBtnLeftAnim(0);
   };
 
   const loginSubmitHandler = () => {
@@ -76,7 +78,6 @@ const AuthScreen: FC = () => {
               right: 0,
               alignItems: "center",
               backgroundColor: "orange",
-              overflow: "hidden",
             }}
           >
             <Formik
@@ -126,8 +127,9 @@ const AuthScreen: FC = () => {
                       ]}
                     />
                   </View>
+
                   <View style={styles.authScreenBtnRow}>
-                    <CustomButton
+                    {/* <CustomButton
                       title="Back"
                       onPress={() => backToNothing()}
                       containerStyle={{
@@ -143,7 +145,7 @@ const AuthScreen: FC = () => {
                         zIndex: 20,
                         left: 0,
                       }}
-                    />
+                    /> */}
                     <CustomButton
                       title="Login"
                       onPress={(e: any) => {
@@ -156,14 +158,12 @@ const AuthScreen: FC = () => {
                         ...shadow(os, { elevation: 10 }),
                         opacity: isLoginShowing || !isSignupShowing ? 1 : 0,
                         position: "absolute",
-                        left: isLoginShowing ? "100%" : "0%",
-                        transform: [{ translateX: isLoginShowing ? -100 : 0 }],
-                      }}
-                      animation={{
+                        // left: isLoginShowing ? "100%" : "0%",
                         left: loginBtnLeft.interpolate({
                           inputRange: [0, 100],
                           outputRange: ["0%", "100%"],
                         }),
+                        transform: [{ translateX: isLoginShowing ? -100 : 0 }],
                       }}
                     />
                     <Text

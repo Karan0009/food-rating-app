@@ -1,11 +1,23 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useRef } from "react";
-import { Animated, Button, StyleSheet, Text, View } from "react-native";
+import React, { useState, useRef, useEffect } from "react";
+import {
+  Animated,
+  Button,
+  StyleSheet,
+  Text,
+  Touchable,
+  TouchableHighlight,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import AuthScreen from "./src/screens/authScreen";
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
-import { lightTheme } from "./src/constants/theming";
+import { fonts, lightTheme } from "./src/constants/theming";
 import CustomButton from "./src/components/CustomButton";
+import { border } from "./src/utils/styleUtils";
+import useOnLayout from "./src/utils/useLayout";
 
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -20,8 +32,21 @@ const fetchFonts = () => {
 
 export default function App() {
   const [dataLoaded, setDataLoaded] = useState(false);
-  const animatedVal = useRef(new Animated.Value(1)).current;
+  const [animatedVal] = useState(new Animated.Value(0));
   const [isFadeIn, setIsFadeIn] = useState(false);
+
+  const [{ width }, onLayout] = useOnLayout();
+
+  useEffect(() => {
+    Animated.timing(animatedVal, {
+      toValue: 1,
+      duration: 10000,
+      useNativeDriver: false,
+    }).start();
+    // console.log(animatedVal);
+  }, []);
+
+  let percent = 0 / 100;
 
   const startAnim = (toValue: number) => {
     Animated.timing(animatedVal, {
@@ -47,7 +72,94 @@ export default function App() {
         backgroundColor: lightTheme.primary,
       }}
     >
-      <Animated.View
+      <View
+        onLayout={onLayout}
+        style={{
+          position: "absolute",
+          width: "100%",
+          height: 100,
+          top: "50%",
+          backgroundColor: "yellow",
+        }}
+      >
+        <Animated.View
+          style={{
+            position: "absolute",
+            backgroundColor: animatedVal.interpolate({
+              inputRange: [0, 1],
+              outputRange: ["black", "yellow"],
+            }),
+            width: "100%",
+            height: "100%",
+            left: "-100%",
+
+            transform: [
+              {
+                translateX: animatedVal.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [width * 0.1, width * 1],
+                }),
+              },
+            ],
+          }}
+        ></Animated.View>
+      </View>
+      <CustomButton
+        title="start"
+        outerContainerStyles={{
+          position: "absolute",
+          bottom: 0,
+          width: "100%",
+        }}
+        onPress={() => startAnim(width)}
+        containerStyle={{
+          width: "100%",
+          backgroundColor: "pink",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      />
+      {/* <View
+        style={{
+          position: "absolute",
+          bottom: "20%",
+          height: 40,
+          backgroundColor: "yellow",
+          alignSelf: "center",
+          width: "80%",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <CustomButton
+          outerContainerStyles={{
+            position: "absolute",
+            left: "0%",
+          }}
+          containerStyle={{
+            backgroundColor: "red",
+            paddingVertical: 10,
+            paddingHorizontal: 30,
+          }}
+        />
+        <TouchableHighlight
+          onPress={() => console.log(2)}
+          style={{
+            position: "absolute",
+            left: "100%",
+            paddingVertical: 10,
+            paddingHorizontal: 30,
+
+            transform: [{ translateX: 100 }],
+            backgroundColor: "green",
+          }}
+        >
+          <View>
+            <Text>btn</Text>
+          </View>
+        </TouchableHighlight>
+      </View> */}
+      {/* <Animated.View
         style={{
           position: "absolute",
           top: "50%",
@@ -61,12 +173,13 @@ export default function App() {
           onPress={() => startAnim(isFadeIn ? 100 : 0)}
           containerStyle={{
             backgroundColor: animatedVal.interpolate({
-              inputRange: [0, 100],
-              outputRange: ["black", "orange"],
+              inputRange: [0, 50,100],
+              outputRange: ["black", "orange","black"],
+              extrapolate:"clamp"
             }),
           }}
         />
-      </Animated.View>
+      </Animated.View> */}
       {/* <Animated.View
         style={{
           width: 100,

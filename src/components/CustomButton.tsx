@@ -15,15 +15,19 @@ const CustomButton: FC<CustomButtonProps> = (props: CustomButtonProps) => {
   const defaultPressHandler = () => console.log("clicked");
 
   return (
-    <TouchableWithoutFeedback onPress={props?.onPress || defaultPressHandler}>
-      <Animated.View
-        style={[styles.defaultBtnContainer, props?.containerStyle]}
-      >
-        <Text style={[styles.defaultBtnText, props?.textStyle]}>
-          {props?.title || "btn"}
-        </Text>
-      </Animated.View>
-    </TouchableWithoutFeedback>
+    <Animated.View
+      style={[styles.defaultOuterContainer, props?.outerContainerStyles]}
+    >
+      <TouchableWithoutFeedback onPress={props?.onPress || defaultPressHandler}>
+        <Animated.View
+          style={[styles.defaultBtnContainer, props?.containerStyle]}
+        >
+          <Text style={[styles.defaultBtnText, props?.textStyle]}>
+            {props?.title || "btn"}
+          </Text>
+        </Animated.View>
+      </TouchableWithoutFeedback>
+    </Animated.View>
   );
 };
 
@@ -43,6 +47,10 @@ const styles = StyleSheet.create({
     margin: 0,
     lineHeight: 20,
   },
+  defaultOuterContainer: {
+    backgroundColor: "transparent",
+    overflow: "hidden",
+  },
 });
 
 export interface CustomButtonProps {
@@ -51,4 +59,5 @@ export interface CustomButtonProps {
   containerStyle?: object;
   textStyle?: object;
   animation?: object;
+  outerContainerStyles?: object;
 }
