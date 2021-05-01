@@ -16,6 +16,7 @@ const CustomButton: FC<CustomButtonProps> = (props: CustomButtonProps) => {
 
   return (
     <Animated.View
+      onLayout={props?.onLayout || (() => {})}
       style={[styles.defaultOuterContainer, props?.outerContainerStyles]}
     >
       <TouchableWithoutFeedback onPress={props?.onPress || defaultPressHandler}>
@@ -60,4 +61,5 @@ export interface CustomButtonProps {
   textStyle?: object;
   animation?: object;
   outerContainerStyles?: object;
+  onLayout?: Function;
 }

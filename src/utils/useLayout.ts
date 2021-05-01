@@ -19,5 +19,5 @@ export default function useOnLayout() {
     setLayout(event.nativeEvent.layout);
   }, []);
 
-  return [layout, onLayout];
+  return { layout, onLayout };
 }

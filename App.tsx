@@ -35,23 +35,25 @@ export default function App() {
   const [animatedVal] = useState(new Animated.Value(0));
   const [isFadeIn, setIsFadeIn] = useState(false);
 
-  const [{ width }, onLayout] = useOnLayout();
+  const btnLayout = useOnLayout();
+  console.log(btnLayout.layout.width);
 
-  useEffect(() => {
-    Animated.timing(animatedVal, {
-      toValue: 1,
-      duration: 10000,
-      useNativeDriver: false,
-    }).start();
-    // console.log(animatedVal);
-  }, []);
+  // useEffect(() => {
+  //   console.log("hello");
+  //   Animated.timing(animatedVal, {
+  //     toValue: 1,
+  //     duration: 10000,
+  //     useNativeDriver: false,
+  //   }).start();
+  //   // console.log(animatedVal);
+  // }, []);
 
-  let percent = 0 / 100;
+  // let percent = 0 / 100;
 
   const startAnim = (toValue: number) => {
     Animated.timing(animatedVal, {
       toValue,
-      duration: 3000,
+      duration: 1000,
       useNativeDriver: false,
     }).start(() => setIsFadeIn(!isFadeIn));
   };
@@ -72,58 +74,11 @@ export default function App() {
         backgroundColor: lightTheme.primary,
       }}
     >
-      <View
-        onLayout={onLayout}
-        style={{
-          position: "absolute",
-          width: "100%",
-          height: 100,
-          top: "50%",
-          backgroundColor: "yellow",
-        }}
-      >
-        <Animated.View
-          style={{
-            position: "absolute",
-            backgroundColor: animatedVal.interpolate({
-              inputRange: [0, 1],
-              outputRange: ["black", "yellow"],
-            }),
-            width: "100%",
-            height: "100%",
-            left: "-100%",
-
-            transform: [
-              {
-                translateX: animatedVal.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [width * 0.1, width * 1],
-                }),
-              },
-            ],
-          }}
-        ></Animated.View>
-      </View>
-      <CustomButton
-        title="start"
-        outerContainerStyles={{
-          position: "absolute",
-          bottom: 0,
-          width: "100%",
-        }}
-        onPress={() => startAnim(width)}
-        containerStyle={{
-          width: "100%",
-          backgroundColor: "pink",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      />
       {/* <View
         style={{
           position: "absolute",
           bottom: "20%",
-          height: 40,
+          height: 60,
           backgroundColor: "yellow",
           alignSelf: "center",
           width: "80%",
@@ -135,29 +90,62 @@ export default function App() {
           outerContainerStyles={{
             position: "absolute",
             left: "0%",
+            opacity: animatedVal.interpolate({
+              inputRange: [0, 0.8],
+              outputRange: [0, 1],
+              extrapolate: "clamp",
+            }),
+          }}
+          containerStyle={{
+            backgroundColor: "pink",
+            paddingVertical: 20,
+            paddingHorizontal: 30,
+          }}
+          title="Back"
+          onPress={() => startAnim(0)}
+        />
+        <CustomButton
+          outerContainerStyles={{
+            position: "absolute",
+            left: animatedVal.interpolate({
+              inputRange: [0, 1],
+              outputRange: ["0%", "100%"],
+            }),
+            transform: [
+              {
+                translateX: animatedVal.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, -btnLayout.layout.width],
+                }),
+              },
+            ],
           }}
           containerStyle={{
             backgroundColor: "red",
-            paddingVertical: 10,
+            paddingVertical: 20,
             paddingHorizontal: 30,
           }}
+          title="Login"
+          onPress={() => startAnim(1)}
+          onLayout={btnLayout.onLayout}
         />
-        <TouchableHighlight
-          onPress={() => console.log(2)}
-          style={{
+        <CustomButton
+          outerContainerStyles={{
             position: "absolute",
             left: "100%",
-            paddingVertical: 10,
-            paddingHorizontal: 30,
-
-            transform: [{ translateX: 100 }],
-            backgroundColor: "green",
+            opacity: animatedVal.interpolate({
+              inputRange: [0, 0.5, 1],
+              outputRange: [1, 0, 0],
+            }),
+            transform: [{ translateX: -btnLayout.layout.width }],
           }}
-        >
-          <View>
-            <Text>btn</Text>
-          </View>
-        </TouchableHighlight>
+          containerStyle={{
+            backgroundColor: "green",
+            paddingVertical: 20,
+            paddingHorizontal: 30,
+          }}
+          title="Signup"
+        />
       </View> */}
       {/* <Animated.View
         style={{
@@ -220,7 +208,7 @@ export default function App() {
       <View style={{ position: "absolute", bottom: 0, width: "100%" }}>
         <Button onPress={() => startAnim(isFadeIn ? 100 : 0)} title="start" />
       </View> */}
-      {/* <AuthScreen /> */}
+      <AuthScreen />
       {/* <StatusBar style="auto" /> */}
     </View>
   );
