@@ -5,6 +5,7 @@ import {
   Button,
   StyleSheet,
   Text,
+  TextInput,
   Touchable,
   TouchableHighlight,
   TouchableOpacity,
@@ -34,7 +35,7 @@ export default function App() {
   const [dataLoaded, setDataLoaded] = useState(false);
   const [animatedVal] = useState(new Animated.Value(0));
   const [isFadeIn, setIsFadeIn] = useState(false);
-
+  const [showInput, setShowInput] = useState(false);
   const btnLayout = useOnLayout();
   console.log(btnLayout.layout.width);
 
@@ -78,74 +79,94 @@ export default function App() {
         style={{
           position: "absolute",
           bottom: "20%",
-          height: 60,
+          height: 120,
           backgroundColor: "yellow",
           alignSelf: "center",
           width: "80%",
-          flexDirection: "row",
+          flexDirection: "column",
           justifyContent: "space-between",
         }}
       >
-        <CustomButton
-          outerContainerStyles={{
-            position: "absolute",
-            left: "0%",
-            opacity: animatedVal.interpolate({
-              inputRange: [0, 0.8],
-              outputRange: [0, 1],
-              extrapolate: "clamp",
-            }),
+        <Animated.View
+          style={{
+            width: "100%",
+            justifyContent: "center",
+            opacity: animatedVal,
           }}
-          containerStyle={{
-            backgroundColor: "pink",
-            paddingVertical: 20,
-            paddingHorizontal: 30,
-          }}
-          title="Back"
-          onPress={() => startAnim(0)}
-        />
-        <CustomButton
-          outerContainerStyles={{
-            position: "absolute",
-            left: animatedVal.interpolate({
-              inputRange: [0, 1],
-              outputRange: ["0%", "100%"],
-            }),
-            transform: [
-              {
-                translateX: animatedVal.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0, -btnLayout.layout.width],
-                }),
-              },
-            ],
-          }}
-          containerStyle={{
-            backgroundColor: "red",
-            paddingVertical: 20,
-            paddingHorizontal: 30,
-          }}
-          title="Login"
-          onPress={() => startAnim(1)}
-          onLayout={btnLayout.onLayout}
-        />
-        <CustomButton
-          outerContainerStyles={{
-            position: "absolute",
-            left: "100%",
-            opacity: animatedVal.interpolate({
-              inputRange: [0, 0.5, 1],
-              outputRange: [1, 0, 0],
-            }),
-            transform: [{ translateX: -btnLayout.layout.width }],
-          }}
-          containerStyle={{
-            backgroundColor: "green",
-            paddingVertical: 20,
-            paddingHorizontal: 30,
-          }}
-          title="Signup"
-        />
+        >
+          <TextInput
+            style={{ height: "50%", width: "100%", backgroundColor: "white" }}
+            editable={showInput}
+          />
+        </Animated.View>
+        <View style={{ backgroundColor: "orange", width: "100%", height: 60 }}>
+          <CustomButton
+            outerContainerStyles={{
+              position: "absolute",
+              left: "0%",
+              opacity: animatedVal.interpolate({
+                inputRange: [0, 0.8],
+                outputRange: [0, 1],
+                extrapolate: "clamp",
+              }),
+            }}
+            containerStyle={{
+              backgroundColor: "pink",
+              paddingVertical: 20,
+              paddingHorizontal: 30,
+            }}
+            title="Back"
+            onPress={() => {
+              setShowInput(false);
+              startAnim(0);
+            }}
+          />
+          <CustomButton
+            outerContainerStyles={{
+              position: "absolute",
+              left: animatedVal.interpolate({
+                inputRange: [0, 1],
+                outputRange: ["0%", "100%"],
+              }),
+              transform: [
+                {
+                  translateX: animatedVal.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, -btnLayout.layout.width],
+                  }),
+                },
+              ],
+            }}
+            containerStyle={{
+              backgroundColor: "red",
+              paddingVertical: 20,
+              paddingHorizontal: 30,
+            }}
+            title="Login"
+            onPress={() => {
+              setShowInput(true);
+              startAnim(1);
+            }}
+            onLayout={btnLayout.onLayout}
+          />
+          <CustomButton
+            outerContainerStyles={{
+              position: "absolute",
+              left: "100%",
+              opacity: animatedVal.interpolate({
+                inputRange: [0, 0.5, 1],
+                outputRange: [1, 0, 0],
+              }),
+              transform: [{ translateX: -btnLayout.layout.width }],
+            }}
+            containerStyle={{
+              backgroundColor: "green",
+              paddingVertical: 20,
+              paddingHorizontal: 30,
+            }}
+            title="Signup"
+          />
+        </View>
       </View> */}
       {/* <Animated.View
         style={{
