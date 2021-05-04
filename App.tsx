@@ -19,6 +19,7 @@ import { fonts, lightTheme } from "./src/constants/theming";
 import CustomButton from "./src/components/CustomButton";
 import { border } from "./src/utils/styleUtils";
 import useOnLayout from "./src/utils/useLayout";
+import { BlurView } from "@react-native-community/blur";
 
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -37,7 +38,6 @@ export default function App() {
   const [isFadeIn, setIsFadeIn] = useState(false);
   const [showInput, setShowInput] = useState(false);
   const btnLayout = useOnLayout();
-  console.log(btnLayout.layout.width);
 
   // useEffect(() => {
   //   console.log("hello");
@@ -68,6 +68,7 @@ export default function App() {
       />
     );
   }
+
   return (
     <View
       style={{
@@ -75,6 +76,21 @@ export default function App() {
         backgroundColor: lightTheme.primary,
       }}
     >
+      <View style={{ position: "absolute", top: "50%" }}>
+        <Text>hello this should not be blurred</Text>
+      </View>
+      <BlurView
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+        }}
+        blurType="light"
+        blurAmount={10}
+        reducedTransparencyFallbackColor="white"
+      />
       {/* <View
         style={{
           position: "absolute",
@@ -229,7 +245,7 @@ export default function App() {
       <View style={{ position: "absolute", bottom: 0, width: "100%" }}>
         <Button onPress={() => startAnim(isFadeIn ? 100 : 0)} title="start" />
       </View> */}
-      <AuthScreen />
+      {/* <AuthScreen /> */}
       {/* <StatusBar style="auto" /> */}
     </View>
   );

@@ -19,6 +19,7 @@ import { lightTheme, fonts } from "../constants/theming";
 import GlobalStyles from "../global/globalStyles";
 import { border, shadow } from "../utils/styleUtils";
 import useOnLayout from "../utils/useLayout";
+// import { BlurView } from "@react-native-community/blur";
 
 const AuthScreen: FC = () => {
   const os: string = Platform.OS;
@@ -33,7 +34,7 @@ const AuthScreen: FC = () => {
   const loginBtnLeftAnim = (toValue: number) => {
     Animated.timing(loginBtnLeft, {
       toValue,
-      duration: 1000,
+      duration: 500,
       useNativeDriver: false,
     }).start();
   };
@@ -57,149 +58,160 @@ const AuthScreen: FC = () => {
     console.log("eh");
   };
 
-  const inputChangeHandler = (e) => {
+  const inputChangeHandler = (e: any) => {
     console.log(e.target.id);
   };
 
   return (
     <SafeAreaView style={GlobalStyles.droidSafeArea}>
-      {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
-      <ImageBackground
-        source={require("../../assets/authScreenBackground.jpg")}
-        style={[GlobalStyles.droidSafeArea, { marginTop: 0 }]}
-        blurRadius={2}
-      >
-        <View style={styles.appTitleContainer}>
-          <Text style={styles.appTitle}>I am hungry!</Text>
-        </View>
-
-        <Animated.View
-          style={{
-            height: "auto",
-            width: "100%",
-            position: "absolute",
-            bottom: "25%",
-            left: 0,
-            right: 0,
-            alignItems: "center",
-            backgroundColor: "orange",
-          }}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ImageBackground
+          source={require("../../assets/authScreenBackground.jpg")}
+          style={[GlobalStyles.droidSafeArea, { marginTop: 0 }]}
+          blurRadius={isLoginShowing ? 5 : 0}
         >
-          <Formik
-            initialValues={{ email: "", password: "" }}
-            onSubmit={(values, actions) => {
-              console.log(values);
-              actions.resetForm();
+          <View style={styles.appTitleContainer}>
+            <Text style={styles.appTitle}>I am hungry!</Text>
+          </View>
+
+          <Animated.View
+            style={{
+              height: "auto",
+              width: "100%",
+              position: "absolute",
+              bottom: "25%",
+              left: 0,
+              right: 0,
+              alignItems: "center",
+              backgroundColor: "orange",
             }}
           >
-            {({ handleChange, handleBlur, handleSubmit, values }) => (
-              <View
-                style={{
-                  width: "80%",
-                  backgroundColor: "yellow",
-                }}
-              >
+            <Formik
+              initialValues={{ email: "", password: "" }}
+              onSubmit={(values, actions) => {
+                console.log(values);
+                actions.resetForm();
+              }}
+            >
+              {({ handleChange, handleBlur, handleSubmit, values }) => (
                 <View
                   style={{
-                    opacity: isLoginShowing ? 1 : 0,
+                    width: "80%",
+                    backgroundColor: "yellow",
                   }}
                 >
-                  <TextInput
-                    onChangeText={handleChange("email")}
-                    onBlur={handleBlur("email")}
-                    value={values.email}
-                    textContentType="emailAddress"
-                    keyboardType="email-address"
-                    placeholder="Email"
-                    style={[
-                      styles.authInput,
-                      { ...shadow(os, { elevation: 10 }) },
-                    ]}
-                  />
+                  <View
+                    style={{
+                      opacity: isLoginShowing ? 1 : 0,
+                    }}
+                  >
+                    <TextInput
+                      onChangeText={handleChange("email")}
+                      onBlur={handleBlur("email")}
+                      value={values.email}
+                      textContentType="emailAddress"
+                      keyboardType="email-address"
+                      placeholder="Email"
+                      style={[
+                        styles.authInput,
+                        { ...shadow(os, { elevation: 10 }) },
+                      ]}
+                      editable={isLoginShowing}
+                    />
 
-                  <TextInput
-                    onChangeText={handleChange("password")}
-                    onBlur={handleBlur("password")}
-                    value={values.password}
-                    placeholder="Password"
-                    textContentType="password"
-                    keyboardType="default"
-                    style={[
-                      styles.authInput,
-                      {
-                        ...shadow(os, { elevation: 10 }),
-                      },
-                    ]}
-                  />
-                </View>
+                    <TextInput
+                      onChangeText={handleChange("password")}
+                      onBlur={handleBlur("password")}
+                      value={values.password}
+                      placeholder="Password"
+                      textContentType="password"
+                      keyboardType="default"
+                      style={[
+                        styles.authInput,
+                        {
+                          ...shadow(os, { elevation: 10 }),
+                        },
+                      ]}
+                      editable={isLoginShowing}
+                    />
+                  </View>
 
-                <View style={styles.authScreenBtnRow}>
-                  {/* <CustomButton
+                  <View style={styles.authScreenBtnRow}>
+                    <CustomButton
                       title="Back"
                       onPress={() => backToNothing()}
                       outerContainerStyles={{
-                        position: "absolute",
+                        position: "relative",
                         left: 0,
                         zIndex: 1,
+                        opacity: loginBtnLeft.interpolate({
+                          inputRange: [0.5, 1],
+                          outputRange: [0, 1],
+                          extrapolate: "clamp",
+                        }),
                         // transform: [
-                        //   { scaleX: isLoginShowing ? 1 : 0 },
-                        //   { scaleY: isLoginShowing ? 1 : 0 },
+                        //   {
+                        //     scale: loginBtnLeft.interpolate({
+                        //       inputRange: [0, 1],
+                        //       outputRange: [0, 1],
+                        //     }),
+                        //   },
                         // ],
                         ...shadow(os, { elevation: 10 }),
                       }}
                       containerStyle={{
-                        ...border(1, "solid", lightTheme.primary),
+                        ...border(2, "solid", lightTheme.primary),
                         backgroundColor: "transparent",
                         paddingHorizontal: 30,
                         // paddingVertical: 40,
                         // opacity: isLoginShowing ? 1 : 0,
                       }}
-                    /> */}
-                  <TouchableOpacity
-                    onPress={() => console.log("hello")}
-                    style={{
-                      backgroundColor: "blue",
-                      position: "absolute",
-                      right: 0,
-                      padding: 20,
-                    }}
-                  >
-                    <Text>hello</Text>
-                  </TouchableOpacity>
-                  <CustomButton
-                    onLayout={loginBtnLayout.onLayout}
-                    title="Login"
-                    onPress={(e: any) => {
-                      console.log("hello");
-                      if (isLoginBtnSubmitting) handleSubmit(e);
-                      else showLoginForm();
-                    }}
-                    outerContainerStyles={{
-                      left: "0%",
-                      position: "absolute",
-                      // zIndex: 20,
-                      // left: isLoginShowing ? "100%" : "0%",
-                      // opacity: 1,
-                      ...shadow(os, { elevation: 10 }),
-                    }}
-                    containerStyle={{
-                      ...border(1, "solid", lightTheme.primary),
-                      paddingHorizontal: 30,
-                      backgroundColor: lightTheme.primary,
-                    }}
-                  />
+                    />
 
-                  <Text
-                    style={[
-                      styles.authScreenBtnRowOr,
-                      {
-                        opacity: !isLoginShowing && !isSignupShowing ? 1 : 0,
-                      },
-                    ]}
-                  >
-                    Or
-                  </Text>
-                  {/* <CustomButton
+                    <CustomButton
+                      onLayout={loginBtnLayout.onLayout}
+                      title="Login"
+                      onPress={(e: any) => {
+                        console.log("hello");
+                        if (isLoginBtnSubmitting) handleSubmit(e);
+                        else showLoginForm();
+                      }}
+                      outerContainerStyles={{
+                        position: "absolute",
+                        zIndex: 2,
+                        left: loginBtnLeft.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: ["0%", "100%"],
+                        }),
+                        transform: [
+                          {
+                            translateX: loginBtnLeft.interpolate({
+                              inputRange: [0, 1],
+                              outputRange: [0, -loginBtnLayout.layout.width],
+                            }),
+                          },
+                        ],
+                        // opacity: 1,
+                        ...shadow(os, { elevation: 10 }),
+                      }}
+                      containerStyle={{
+                        ...border(1, "solid", lightTheme.primary),
+                        paddingHorizontal: 30,
+                        backgroundColor: lightTheme.primary,
+                      }}
+                    />
+
+                    <Text
+                      style={[
+                        styles.authScreenBtnRowOr,
+                        {
+                          opacity: !isLoginShowing && !isSignupShowing ? 1 : 0,
+                        },
+                      ]}
+                    >
+                      Or
+                    </Text>
+                    {/* <CustomButton
                       title="Signup"
                       containerStyle={{
                         backgroundColor: lightTheme.tertiary,
@@ -211,13 +223,13 @@ const AuthScreen: FC = () => {
                       }}
                       textStyle={{ color: lightTheme.primary }}
                     /> */}
+                  </View>
                 </View>
-              </View>
-            )}
-          </Formik>
-        </Animated.View>
-      </ImageBackground>
-      {/* </TouchableWithoutFeedback> */}
+              )}
+            </Formik>
+          </Animated.View>
+        </ImageBackground>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };
@@ -248,9 +260,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     width: "100%",
-    marginTop: 50,
-    backgroundColor: "pink",
-    position: "absolute",
+    marginTop: 30,
+    // backgroundColor: "pink",
   },
   authScreenBtnRowOr: {
     position: "absolute",
